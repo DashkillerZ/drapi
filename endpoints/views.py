@@ -7,7 +7,7 @@ from django.http import HttpResponse
 import urllib
 
 import openai
-openai.api_key = "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"
+openai.api_key = ""
 
 def custom_404_view(request, exception):
     return HttpResponseNotFound('<h1>404 Page Not Found</h1>')
