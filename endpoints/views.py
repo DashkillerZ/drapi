@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import RSS_Feed_KeyowrdsSerializer, RSS_Feed_DatabaseSerializer, RSS_Feed_Name_IconSerializer,RSS_Feed_TempSerializer
@@ -7,7 +8,7 @@ from django.http import HttpResponse
 import urllib
 
 import openai
-openai.api_key = "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"
+openai.api_key = settings.OPENAI_API_KEY
 
 def custom_404_view(request, exception):
     return HttpResponseNotFound('<h1>404 Page Not Found</h1>')
@@ -95,27 +96,26 @@ def accept_article(request, title):
         return HttpResponse("<h2>Article not found</h2>")
         
         
-def chatbot(prompt):
-    messages = [
-        {"role": "system", "content": "behave like cyber expert"},
-        {"role": "user", "content": prompt},
-    ]
-    chat = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo", 
-        messages=messages,
-        
-    )
-    response = chat.choices[0].message.content
-    messages.append({"role": "assistant", "content": response})
-    return response
+def chatbot(input):
+    if input:
+        messages=[
+        {"role": "system", "content": "You are a helpful assistant in cybersecurity filed."},
+        {"role": "user", "content": "What is cybersecurity?"},
+        {"role":"user","content":"What is the math behind cybersecurity expert"},
+        ]
+        message={"role":"user","content":input}
+        messages.append(message)
+        response = openai.ChatCompletion.create( model="gpt-3.5-turbo", messages=messages)
+        reply = response["choices"][0]["message"]["content"]
+        return reply
 
 @api_view(['POST'])
 def generate_response(request):
-    try:
+    # try:
         prompt = request.data.get('prompt', '')
         response = chatbot(prompt)
         return Response({'response': response})
-    except:
+    # except:
         return Response({'error': 'An error occurred'})
 
     

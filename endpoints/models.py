@@ -71,3 +71,19 @@ class RSS_Feed_Temp(models.Model):
     class Meta:
         verbose_name = 'Article'
         verbose_name_plural = 'Articles(Discarded)'
+
+# vikram sethi sir models
+class Dr_Vikram_Sethi(models.Model):
+    # id = models.AutoField(primary_key=True, auto_increment=False)
+    id = models.IntegerField(primary_key=True)
+    feedName =  models.TextField()
+    title = models.TextField(unique=True)
+    publishedDate = models.DateTimeField()
+    link = models.TextField()
+    summary = models.TextField()
+
+    def __str__(self):
+        return self.title
+    class Meta:
+        verbose_name = 'Article'
+        verbose_name_plural = 'Articles'
